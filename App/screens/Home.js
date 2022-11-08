@@ -11,24 +11,18 @@ import {
 import { Entypo } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { format } from "date-fns";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { ConversionInput } from "../components/ConversionInput";
 import colors from "../constants/colors";
 import { Button } from "../components/Button";
 import { KeyboardSpacer } from "../components/KeyboardSpacer";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const screen = Dimensions.get("window");
 
 const styles = StyleSheet.create({
-  header: {
-    alignItems: "flex-end",
-    marginHorizontal: 10,
-    marginVertical: 10,
-  },
   container: {
     backgroundColor: colors.blue,
     flex: 1,
-    justifyContent: "center",
   },
   content: {
     paddingTop: screen.height * 0.1,
@@ -55,8 +49,16 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.white,
-    fontSize: 13,
+    fontSize: 14,
     textAlign: "center",
+  },
+  header: {
+    alignItems: "flex-end",
+    marginHorizontal: 10,
+    marginVertical: 10,
+  },
+  inputContainer: {
+    marginBottom: 30,
   },
 });
 
@@ -69,13 +71,14 @@ export default ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.blue} />
       <ScrollView scrollEnabled={scrollEnabled}>
-        <StatusBar barStyle="light-content" backgroundColor={colors.blue} />
         <SafeAreaView style={styles.header}>
           <TouchableOpacity onPress={() => navigation.push("Options")}>
             <Entypo name="cog" size={32} color={colors.white} />
           </TouchableOpacity>
         </SafeAreaView>
+
         <View style={styles.content}>
           <View style={styles.logContainer}>
             <Image
@@ -93,22 +96,33 @@ export default ({ navigation }) => {
 
           <Text style={styles.textHeader}>Curency Converter</Text>
 
-          <ConversionInput
-            text={baseCurrency}
-            value="123"
-            onButtonPress={() => alert("todo!")}
-            onChangeText={(text) => console.log("text", text)}
-            keyboardType="numeric"
-          />
-
-          <ConversionInput
-            text={quoteCurrency}
-            value="123"
-            onButtonPress={() => alert("todo!")}
-            onChangeText={(text) => console.log("text", text)}
-            keyboardType="numeric"
-            editable={false}
-          />
+          <View styles={styles.inputContainer}>
+            <ConversionInput
+              text={baseCurrency}
+              value="123"
+              onButtonPress={() =>
+                navigation.push("CurrencyList", {
+                  title: "Base Currency",
+                  activeCurrency: baseCurrency,
+                })
+              }
+              onChangeText={(text) => console.log("text", text)}
+              keyboardType="numeric"
+            />
+            <ConversionInput
+              text={quoteCurrency}
+              value="123"
+              onButtonPress={() =>
+                navigation.push("CurrencyList", {
+                  title: "Quote Currency",
+                  activeCurrency: quoteCurrency,
+                })
+              }
+              onChangeText={(text) => console.log("text", text)}
+              keyboardType="numeric"
+              editable={false}
+            />
+          </View>
 
           <Text style={styles.text}>
             {`1 ${baseCurrency} = ${conversionRate} ${quoteCurrency} as of ${format(
